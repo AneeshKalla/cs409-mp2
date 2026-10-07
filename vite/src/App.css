@@ -1,0 +1,178 @@
+header, main, footer {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  border-bottom: 1px solid #333;
+}
+
+h1 {
+  margin: 0;
+  color: #ff4658;
+  font-size: 28px;
+  letter-spacing: -1px;
+}
+
+h2 {
+  margin: 0 0 20px;
+  font-size: 28px;
+  line-height: 1.3;
+}
+
+nav, .controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+nav a {
+  padding: 6px 12px;
+  border-radius: 6px;
+  color: #bbb;
+}
+
+nav a.active {
+  background: #2b2b2b;
+  color: #fff;
+}
+
+main {
+  min-height: 75vh;
+  padding-top: 36px;
+  padding-bottom: 48px;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: #ccc;
+  font-size: 14px;
+}
+
+.search-field {
+  flex: 1;
+  min-width: 180px;
+}
+
+label select {
+  min-width: 160px;
+  align-self: flex-start;
+}
+
+main > p, .movie-list p, .gallery p {
+  color: #b5b5b5;
+  font-size: 14px;
+}
+
+.movie-list, .gallery {
+  list-style: none;
+  padding: 0;
+  margin: 24px 0 0;
+}
+
+.movie-list li {
+  padding: 18px 20px;
+  margin-bottom: 10px;
+  background: #202020;
+  border: 1px solid #333;
+  border-radius: 8px;
+}
+
+.movie-list a, .gallery a {
+  font-weight: bold;
+}
+
+.movie-list p, .gallery p {
+  margin: 6px 0 0;
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 28px 20px;
+}
+
+.gallery li {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.gallery img, .missing-poster {
+  display: block;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  background: #292929;
+}
+
+.missing-poster {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #bbb;
+}
+
+.movie-details {
+  display: flex;
+  align-items: flex-start;
+  gap: 32px;
+  margin-top: 24px;
+}
+
+.detail-poster {
+  width: 240px;
+  max-width: 100%;
+  border-radius: 8px;
+}
+
+.detail-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.detail-info p {
+  color: #ccc;
+}
+
+.detail-info .controls {
+  margin-top: 24px;
+}
+
+[role="alert"] {
+  color: #ff9aa3;
+}
+
+footer {
+  border-top: 1px solid #333;
+  color: #999;
+  font-size: 12px;
+}
+
+@media (max-width: 600px) {
+  header, main, footer {
+    padding: 20px 16px;
+  }
+
+  nav {
+    gap: 4px;
+  }
+
+  .movie-details {
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .gallery {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px 16px;
+  }
+}

@@ -20,6 +20,9 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: vite
 
     steps:
       - name: Checkout
@@ -30,18 +33,24 @@ jobs:
         with:
           node-version: 20
           cache: npm
+          cache-dependency-path: vite/package-lock.json
 
       - name: Install dependencies
         run: npm ci
 
       - name: Build site
         run: npm run build
+        env:
+          VITE_TMDB_API_KEY: ${{ secrets.VITE_TMDB_API_KEY }}
+
+      - name: Support direct detail URLs
+        run: cp dist/index.html dist/404.html
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           # Vite's build output dir (CRA used ./build)
-          path: ./dist
+          path: ./vite/dist
   
   deploy:
     needs: build

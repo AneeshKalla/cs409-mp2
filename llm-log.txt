@@ -1,0 +1,222 @@
+MP 2: Front-end App Due: Tuesday, Oct 6, 2026, 11:59PM CT Table of Contents Ass…
+
+im going to make a netflix kinda app where you can search for movies and theres also a gallery.
+APi details are in the .env file
+documentation is at this link:
+https://developer.themoviedb.org/docs/getting-started
+i want you to make the app AS MINMAL AS POSSIBLE while meeting all the requirements, idc if it looks ugly i want the bare minimum, after we get the functionality down then we can make it look pretty later. Simple as possible syntax and structure and everything, while following requriements of assignment like using typescript
+
+
+
+
+
+Show more
+
+1:49 AM
+
+
+
+
+
+
+Worked for 5m 19s
+
+
+
+Implemented the minimal app in vite/:
+- Search as you type.
+- Title/rating sorting, ascending/descending.
+- Poster gallery with genre filtering.
+- Detail URLs with Previous/Next navigation.
+- TypeScript, React Router, Axios, and plain CSS.
+Run:
+cd vite
+npm run dev
+Build passes; all four TMDB endpoint checks returned HTTP 200. Lint reports two effect-related warnings, no errors. Browser interactions weren’t tested.
+Results are limited to the first 20 movies for simplicity. Deployment instructions and source credits are in vite/README.md. Remember to submit this chatlog for the assignment’s LLM disclosure.
+
+  Edited 3 files+14-4View changesUndoView changes
+
+.github/workflows/deploy.yml.github/workflows/deploy.yml+11-2
+vite/index.htmlvite/index.html+1-2
+vite/vite.config.tsvite/vite.config.ts+2-0
+
+
+
+
+
+1:54 AM
+
+
+
+
+
+
+
+
+explain what controller does and why tehres a timeout in the effect that does API calls and how that works
+
+
+
+
+
+
+
+2:16 AM
+
+
+
+
+
+
+controller lets us cancel an API request when it’s no longer needed:
+const controller = new AbortController()
+We connect it to Axios using its signal:
+await api.get('/search/movie', {
+  params: { query },
+  signal: controller.signal,
+})
+Calling controller.abort() cancels that request. This matters when you type another character or leave the page: an old request shouldn’t update the screen after a newer search.
+The setTimeout waits 300 milliseconds before making the request:
+const timer = setTimeout(async () => {
+  // Make API calls here
+}, 300)
+That’s called debouncing. Instead of requesting movies for every keystroke, we wait until you briefly stop typing.
+For example, typing bat quickly:
+1. You type b: a 300 ms timer starts.
+2. You type a: React cleans up the previous effect, cancels its timer, and starts a new timer for ba.
+3. You type t: the same thing happens for bat.
+4. You stop typing for 300 ms: the request for bat runs.
+The cleanup handles both possibilities:
+return () => {
+  clearTimeout(timer)
+  controller.abort()
+}
+- clearTimeout(timer) cancels the scheduled call if it hasn’t started yet.
+- controller.abort() cancels the request if it has already started.
+React runs that cleanup before rerunning the effect when its dependencies change, and when the component is removed.
+Finally, this check:
+if (!controller.signal.aborted) {
+  setError('Could not load movies...')
+}
+prevents intentional cancellations from displaying an error. We also use it before setLoading(false) so a canceled request doesn’t turn off the loading indicator for a newer request.
+
+
+2:16 AM
+
+
+
+
+
+
+
+
+are you doing these:
+- Use React Router for routing.
+- Use Axios for API calls.
+- Use TypeScript.
+Simple yes or no
+
+
+
+
+
+
+
+2:19 AM
+
+
+
+
+
+
+Yes, all three.
+
+
+2:19 AM
+
+
+
+
+
+
+
+
+is controller axios
+
+
+
+
+
+
+
+2:19 AM
+
+
+
+
+
+
+No. AbortController is built into the browser. Axios uses its signal to cancel requests.
+
+
+2:19 AM
+
+
+
+
+
+
+
+
+is api.get axios (usualy its fetch)
+
+
+
+
+
+
+
+2:19 AM
+
+
+
+
+
+
+Yes. api is an Axios instance created with axios.create() in api.ts, so api.get() makes an Axios GET request. We’re using Axios instead of fetch().
+
+
+2:20 AM
+
+
+
+
+
+
+
+
+what is react router
+
+
+
+
+
+
+
+2:20 AM
+
+
+
+
+
+
+React Router shows different React components based on the URL without reloading the whole page.
+In your app:
+- / → movie search
+- /gallery → poster gallery
+- /movie/550 → details for movie 550
+<Route> connects a URL to a component, and <Link> lets users navigate between those URLs.
+
+
+2:20 AM
